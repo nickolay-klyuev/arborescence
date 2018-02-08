@@ -21,6 +21,50 @@
 		12: [],
 		13: [8]
 	};
+
+	function findRoot(graph) {
+		let count = 0;
+		let countArray = [];
+		let findedVertex = [];
+		let bool = false;
+
+		for (vertex in graph) {
+			count++;
+			countArray.push(count);
+		}
+
+		console.log(countArray);
+
+		for (vertex in graph) {
+			let length = graph[vertex].length;
+
+			if (length < 1) continue;
+
+			for (let i = 0; i < length; i++) {
+				for (let k = 0; k < findedVertex.length; k++) {
+					if (findedVertex[k] === graph[vertex][i]) {
+						bool = true;
+						break;
+					} else {
+						bool = false;
+					}
+				}
+
+				if (bool === false) {
+					for (let j = 0; j < count; j++) {
+						if (countArray[j] === graph[vertex][i]) {
+							findedVertex.push(countArray[j]);
+							countArray.splice(j, 1);
+							break;
+						}
+					}
+				}
+			}
+		}
+		console.log(countArray);
+	}
+
+	findRoot(graph);
 </script>
 </body>
 </html>
