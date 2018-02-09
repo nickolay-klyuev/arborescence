@@ -81,6 +81,22 @@
 		}
 	}
 
+	function findMaxChain(graph) {//Input: adjacency list of directed graph (object)
+		let maxVertexes = [];
+		for (vertex in graph) {
+			if (graph[vertex].length < 1) continue;
+			if (maxVertexes.length === 0) {
+				maxVertexes.push([vertex, graph[vertex].length]);
+				continue;
+			}
+
+			if (maxVertexes[maxVertexes.length - 1][1] < graph[vertex].length) {
+				maxVertexes.splice(0, maxVertexes.length);
+				maxVertexes.push([vertex, graph[vertex].length]);
+			}
+		}
+	}
+
 	let rootVertex = findRoot(graph);
 	console.log(rootVertex);
 </script>
