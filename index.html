@@ -22,7 +22,7 @@
 		13: [8]
 	};
 
-	function findRoot(graph) {
+	function findRoot(graph) {// Input: adjacency list of directed graph (object), Output: object with info about existing and number of a root (rootVertex)
 		let count = 0;
 		let countArray = [];
 		let findedVertex = [];
@@ -63,30 +63,26 @@
 				}
 			}
 		}
-		console.log(countArray);
 
 		if (countArray.length > 1) {
 			rootVertex.exist = false;
-			console.log(rootVertex);
 			return rootVertex;
 		} else if (countArray.length === 0) {
 			rootVertex.exist = true;
 			rootVertex.number = 0;
-			console.log(rootVertex);
 			return rootVertex;
 		} else if (graph[countArray[0]].length === 0) {
 			rootVertex.exist = false;
-			console.log(rootVertex);
 			return rootVertex;
 		} else {
 			rootVertex.exist = true;
 			rootVertex.number = countArray[0];
-			console.log(rootVertex);
 			return rootVertex;
 		}
 	}
 
-	findRoot(graph);
+	let rootVertex = findRoot(graph);
+	console.log(rootVertex);
 </script>
 </body>
 </html>
