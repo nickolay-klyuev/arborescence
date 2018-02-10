@@ -81,7 +81,7 @@
 		}
 	}
 
-	function findMaxChain(graph) {//Input: adjacency list of directed graph (object)
+	function findMaxVertexes(graph) {//Input: adjacency list of directed graph (object), Output: Array with the couples of numbers - number of vertex and amount of outgoing edges
 		let maxVertexes = [];
 		for (vertex in graph) {
 			if (graph[vertex].length < 1) continue;
@@ -90,15 +90,24 @@
 				continue;
 			}
 
-			if (maxVertexes[maxVertexes.length - 1][1] < graph[vertex].length) {
+			if (maxVertexes[maxVertexes.length - 1][1] === graph[vertex].length) {
+				maxVertexes.push([vertex, graph[vertex].length]);
+			} else if (maxVertexes[maxVertexes.length - 1][1] < graph[vertex].length) {
 				maxVertexes.splice(0, maxVertexes.length);
 				maxVertexes.push([vertex, graph[vertex].length]);
 			}
+
+
 		}
+
+		return maxVertexes;
 	}
 
 	let rootVertex = findRoot(graph);
 	console.log(rootVertex);
+
+	let maxVertexes = findMaxVertexes(graph);
+	console.log(maxVertexes);
 </script>
 </body>
 </html>
