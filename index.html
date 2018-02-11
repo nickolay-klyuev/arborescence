@@ -96,11 +96,32 @@
 				maxVertexes.splice(0, maxVertexes.length);
 				maxVertexes.push([vertex, graph[vertex].length]);
 			}
-
-
 		}
 
 		return maxVertexes;
+	}
+
+	function findMaxChain(graph, maxVertexes) {
+		let numbers = [];
+		let chain = [];
+		for (let i = 0; i < maxVertexes.length; i++) {
+			numbers.push(maxVertexes[i][0]);
+		}
+
+		for (let i = 0; i < numbers.length; i++) {
+			let vertex = numbers[i];
+			for (let j = 0; j < numbers.length; j++) {
+				if (vertex === numbers[j]) continue;
+
+				for (let k = 0; k < maxVertexes[j][1]; k++) {
+					if (vertex == graph[numbers[j]][k]) {
+						chain.push([numbers[j],vertex]);
+						break;
+					}
+				}
+			}
+		}
+		return chain;
 	}
 
 	let rootVertex = findRoot(graph);
@@ -108,6 +129,9 @@
 
 	let maxVertexes = findMaxVertexes(graph);
 	console.log(maxVertexes);
+
+	let maxChain = findMaxChain(graph, maxVertexes);
+	console.log(maxChain);
 </script>
 </body>
 </html>
