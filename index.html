@@ -124,18 +124,65 @@
 		return chain;
 	}
 
-	function findRootInChain() {
+	function buildArborescence(graph, root) {
+		let plannedGraph = {};
+		let buildedGraph = {};
+		let point = root;
+		let allVertexes = [];
+
+		plannedGraph[point] = graph[point];
+		buildedGraph[point] = graph[point];
+		allVertexes.push(point);
+
+		for (let x = 0; x < 2; x++) {
+			for (let i = 0; i < buildedGraph[point].length; i++) {
+				allVertexes.push(buildedGraph[point][i]);
+			}
+
+			for (let i = 0; i < plannedGraph[point].length; i++) {
+				let x = plannedGraph[point][i];
+				plannedGraph[x] = graph[x];
+			}
+
+			let maxVertexes = findMaxVertexes(plannedGraph);
+			let maxVertex = maxVertexes[0][0];
+
+			let buildedVertexes = [];
+			for (let i = 0; i < plannedGraph[maxVertex].length; i++) {
+				let bool = true;
+				for (let j = 0; j < allVertexes.length; j++) {
+					if (plannedGraph[maxVertex][i] === allVertexes[j]) {
+						bool = false;
+						break;
+					}
+				}
+
+				if (bool === true) {
+					buildedVertexes.push(plannedGraph[maxVertex][i]);
+				}
+			}
+
+			buildedGraph[maxVertex] = buildedVertexes;
+			plannedGraph = buildedGraph;
+
+			point = maxVertex;
+		}
 		
+
+		console.log(plannedGraph);
+		console.log(buildedGraph);
 	}
 
 	let rootVertex = findRoot(graph);
-	console.log(rootVertex);
+	//console.log(rootVertex);
 
 	let maxVertexes = findMaxVertexes(graph);
-	console.log(maxVertexes);
+	//console.log(maxVertexes);
 
 	let maxChain = findMaxChain(graph, maxVertexes);
-	console.log(maxChain);
+	//console.log(maxChain);
+
+	buildArborescence(graph, 8);
 </script>
 </body>
 </html>
