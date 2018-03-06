@@ -132,13 +132,13 @@
 
 		plannedGraph[point] = graph[point];
 		buildedGraph[point] = graph[point];
-		allVertexes.push(point);
+		allVertexes.push(point)
+
+		for (let i = 0; i < buildedGraph[point].length; i++) {
+			allVertexes.push(buildedGraph[point][i]);
+		}
 
 		for (let x = 0; x < 2; x++) {
-			for (let i = 0; i < buildedGraph[point].length; i++) {
-				allVertexes.push(buildedGraph[point][i]);
-			}
-
 			for (let i = 0; i < plannedGraph[point].length; i++) {
 				let x = plannedGraph[point][i];
 				plannedGraph[x] = graph[x];
@@ -158,7 +158,9 @@
 				}
 
 				if (bool === true) {
-					buildedVertexes.push(plannedGraph[maxVertex][i]);
+					let x = plannedGraph[maxVertex][i];
+					buildedVertexes.push(x);
+					allVertexes.push(x);
 				}
 			}
 
@@ -166,10 +168,9 @@
 			plannedGraph = buildedGraph;
 
 			point = maxVertex;
+			console.log(allVertexes);
 		}
-		
 
-		console.log(plannedGraph);
 		console.log(buildedGraph);
 	}
 
