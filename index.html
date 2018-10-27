@@ -22,6 +22,48 @@
 		13: [8]
 	};
 
+	let graph_2 = {
+		1: [13,14],
+		2: [15],
+		3: [],
+		4: [1,2,3,5,6],
+		5: [3],
+		6: [7],
+		7: [4,5,9,10],
+		8: [7],
+		9: [11,12],
+		10: [12,13],
+		11: [],
+		12: [],
+		13: [8],
+		14: [],
+		15: [16],
+		16: [14]
+	};
+
+	let graph_3 = {
+		1: [13,14],
+		2: [15],
+		3: [15],
+		4: [1,2,3,5,6,18,19],
+		5: [3],
+		6: [7],
+		7: [4,5,9,10],
+		8: [7],
+		9: [11,12,17],
+		10: [12,13],
+		11: [],
+		12: [],
+		13: [8],
+		14: [],
+		15: [16,19],
+		16: [14,20],
+		17: [7],
+		18: [17],
+		19: [3],
+		20: [13,14]
+	};
+
 	function findRoot(graph) {// Input: adjacency list of directed graph (object), Output: object with info about existing and number of a root (rootVertex)
 		let count = 0;
 		let countArray = [];
@@ -101,6 +143,16 @@
 		return maxVertexes;
 	}
 
+	function removeDuplicates(arr){
+	    let unique_array = []
+	    for(let i = 0;i < arr.length; i++){
+	        if(unique_array.indexOf(arr[i]) == -1){
+	            unique_array.push(arr[i])
+	        }
+	    }
+	    return unique_array
+	}
+
 	function findMaxChain(graph, maxVertexes) {
 		let numbers = [];
 		let chain = [];
@@ -125,29 +177,108 @@
 	}
 
 	function buildArborescence(graph, root) {
+		let buildedGraph = {};
+		let point = root;
+		let nextPoint;
+		let lastPoint = {
+			vertex: "",
+			position: ""
+		};
+		let exeptionedVertexes = [];
+		let exeptionedPointVertexes = [];
+
+		while (lastPoint.position >= 0) {
+			console.log("point: " + point);
+
+			/* Get next point with Max output edges */
+			let vertexLength = 0;
+			graph[point].forEach((vertex) => {
+				if (vertexLength < graph[vertex].length && !exeptionedPointVertexes.includes(vertex)) {
+					vertexLength = graph[vertex].length;
+					nextPoint = vertex;
+				}
+			});
+			if (point == nextPoint) {
+				if (lastPoint.vertex) {
+					lastPoint.position--;
+					lastPoint.vertex = exeptionedPointVertexes[lastPoint.position];
+				} else {
+					lastPoint.position = exeptionedPointVertexes.length - 2;
+					lastPoint.vertex = exeptionedPointVertexes[lastPoint.position];
+				}
+
+				if (lastPoint.position >= 0) {
+					nextPoint = lastPoint.vertex;
+					continue;
+				} else break;
+			}
+			console.log("nextPoint: " + nextPoint);
+
+			
+			if (!exeptionedPointVertexes.includes(point)) {
+				buildedGraph[point] = [];
+				graph[point].forEach((vertex) => {
+					if (!exeptionedVertexes.includes(vertex)) {
+						buildedGraph[point].push(vertex);
+						exeptionedVertexes.push(point);
+						exeptionedVertexes.push(vertex);
+						exeptionedVertexes = removeDuplicates(exeptionedVertexes);
+					}
+				});
+				
+				exeptionedPointVertexes.push(point);
+			}
+			console.log("exeptionedPointVertexes: " + exeptionedPointVertexes);
+			console.log("exeptionedVertexes: " + exeptionedVertexes);
+
+			point = nextPoint;
+		}
+
+		/* adding missing empty (without output edges) verteses */
+		exeptionedVertexes.forEach((vertex) => {
+			if (!buildedGraph[vertex]) {
+				buildedGraph[vertex] = [];
+			}
+		});
+
+		console.log(buildedGraph);
+	}
+
+	/*function buildArborescence(graph, root) {
 		let plannedGraph = {};
+		let plannedVertexes = [];
 		let buildedGraph = {};
 		let point = root;
 		let allVertexes = [];
+		let buildedVertexes = [];
 
 		plannedGraph[point] = graph[point];
+		plannedVertexes.push(point)
 		buildedGraph[point] = graph[point];
 		allVertexes.push(point)
 
 		for (let i = 0; i < buildedGraph[point].length; i++) {
+			//plannedVertexes.push(plannedGraph[point][i]);
 			allVertexes.push(buildedGraph[point][i]);
 		}
 
 		for (let x = 0; x < 2; x++) {
 			for (let i = 0; i < plannedGraph[point].length; i++) {
 				let x = plannedGraph[point][i];
-				plannedGraph[x] = graph[x];
+				let forPlannedGraph = [];
+				for (let j = 0; j < graph[x].length; j++) {
+					if (!plannedVertexes.includes(graph[x][j])) {
+						plannedVertexes.push(graph[x][j]);
+						forPlannedGraph.push(graph[x][j]);
+					}
+				}
+				plannedGraph[x] = forPlannedGraph;
 			}
 
 			let maxVertexes = findMaxVertexes(plannedGraph);
 			let maxVertex = maxVertexes[0][0];
 
-			let buildedVertexes = [];
+			//let buildedVertexes = [];
 			for (let i = 0; i < plannedGraph[maxVertex].length; i++) {
 				let bool = true;
 				for (let j = 0; j < allVertexes.length; j++) {
@@ -165,14 +296,15 @@
 			}
 
 			buildedGraph[maxVertex] = buildedVertexes;
+
 			plannedGraph = buildedGraph;
 
 			point = maxVertex;
-			console.log(allVertexes);
+			//console.log(allVertexes);
 		}
 
 		console.log(buildedGraph);
-	}
+	}*/
 
 	let rootVertex = findRoot(graph);
 	//console.log(rootVertex);
@@ -183,7 +315,7 @@
 	let maxChain = findMaxChain(graph, maxVertexes);
 	//console.log(maxChain);
 
-	buildArborescence(graph, 8);
+	buildArborescence(graph_3, 8);
 </script>
 </body>
 </html>
