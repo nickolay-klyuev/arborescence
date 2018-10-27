@@ -216,6 +216,7 @@
 	}
 
 	function buildArborescence(graph, root) {//Input: adjacency list of directed graph (object) and root (number), Output: adjacency list of arborescence graph (object), in console only
+		console.log(root);
 		let buildedGraph = {};
 		let point = root;
 		let nextPoint;
@@ -228,7 +229,7 @@
 		let exeptionedPointVertexes = [];
 
 		while (lastPoint.position >= 0) {
-			console.log("point: " + point);
+			//console.log("point: " + point);
 
 			/* Get next point with Max output edges */
 			let vertexLength = 0;
@@ -257,7 +258,7 @@
 					continue;
 				} else break;
 			}
-			console.log("nextPoint: " + nextPoint);
+			//console.log("nextPoint: " + nextPoint);
 
 			
 			if (!exeptionedPointVertexes.includes(point)) {
@@ -273,8 +274,8 @@
 				
 				exeptionedPointVertexes.push(point);
 			}
-			console.log("exeptionedPointVertexes: " + exeptionedPointVertexes);
-			console.log("exeptionedVertexes: " + exeptionedVertexes);
+			//console.log("exeptionedPointVertexes: " + exeptionedPointVertexes);
+			//console.log("exeptionedVertexes: " + exeptionedVertexes);
 
 			point = nextPoint;
 		}
@@ -287,6 +288,8 @@
 		});
 
 		console.log(buildedGraph);
+
+		findSumDegArborescence(buildedGraph, root);
 	}
 
 	let rootVertex = findRoot(graph);
@@ -298,9 +301,9 @@
 	let maxChain = findMaxChain(graph, maxVertexes);
 	//console.log(maxChain);
 
-	//buildArborescence(graph_3, 13);
+	buildArborescence(graph_3, 8);
 
-	findSumDegArborescence(arborescenceGraph, 13);
+	//findSumDegArborescence(arborescenceGraph, 13);
 </script>
 </body>
 </html>
