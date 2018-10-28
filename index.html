@@ -64,6 +64,29 @@
 		20: [13,14]
 	};
 
+	let graph_4_new = {
+		1: [2,4,5,19,9],
+		2: [5,3,9],
+		3: [7,6,8],
+		4: [10],
+		5: [4,12],
+		6: [11],
+		7: [16,6],
+		8: [12],
+		9: [18,7,3],
+		10: [1],
+		11: [8],
+		12: [13],
+		13: [14],
+		14: [15],
+		15: [11,6,7],
+		16: [17],
+		17: [7],
+		18: [],
+		19: [18,20],
+		20: []
+	}
+
 	let arborescenceGraph = {
 		1: [14],
 		2: [15],
@@ -191,29 +214,58 @@
 	    }
 	    return unique_array
 	}
+	
 
-	function findMaxChain(graph, maxVertexes) {
-		let numbers = [];
-		let chain = [];
-		for (let i = 0; i < maxVertexes.length; i++) {
-			numbers.push(maxVertexes[i][0]);
-		}
-
-		for (let i = 0; i < numbers.length; i++) {
-			let vertex = numbers[i];
-			for (let j = 0; j < numbers.length; j++) {
-				if (vertex === numbers[j]) continue;
-
-				for (let k = 0; k < maxVertexes[j][1]; k++) {
-					if (vertex == graph[numbers[j]][k]) {
-						chain.push([numbers[j],vertex]);
-						break;
+	function findPosibleRoots(oldGraph, graph, max, posible) {
+		let newGraph = Object.assign({}, graph);
+		let maxVertexes = findMaxVertexes(newGraph);
+		if (max != undefined) maxVertexes = maxVertexes.concat(max);
+		let posibleRoot = [];
+		for (vertex in newGraph) {
+			maxVertexes.forEach((maxVer) => {
+				newGraph[vertex].forEach((graphVer) => {
+					if (graphVer == maxVer[0]) {
+						posibleRoot.push(vertex);
+						newGraph[maxVer[0]] = [];
 					}
+				});
+
+				posibleRoot.forEach((root, index) => {
+					if (root == maxVer[0] || oldGraph[maxVer[0]].includes(Number(root))) {
+						posibleRoot.splice(index, 1);
+					}
+				});
+			});
+		}
+		if (posible != undefined && String(posible) == String(posibleRoot)) {
+			console.log(posibleRoot);
+			return posibleRoot;
+		} else findPosibleRoots(oldGraph, newGraph, maxVertexes, posibleRoot);
+	}
+
+
+	/*function findBestRoots(graph, posible) {
+		let bestsRoots = [];
+
+		posible.forEach((ver) => {
+			if (graph[posible].length > 1) {
+				for (vertex in graph) {
+					posible.forEach((posibleVer) => {
+						graph[vertex].forEach((ver) => {
+							if (ver == posibleVer) {
+								bestsRoots.push(vertex);
+							}
+						}); 
+					});
 				}
 			}
-		}
-		return chain;
-	}
+		});
+		
+
+
+		console.log(bestsRoots);
+		return bestsRoots;
+	}*/
 
 	function buildArborescence(graph, root) {//Input: adjacency list of directed graph (object) and root (number), Output: adjacency list of arborescence graph (object), in console only
 		console.log(root);
@@ -229,7 +281,7 @@
 		let exeptionedPointVertexes = [];
 
 		while (lastPoint.position >= 0) {
-			//console.log("point: " + point);
+			console.log("point: " + point);
 
 			/* Get next point with Max output edges */
 			let vertexLength = 0;
@@ -239,6 +291,7 @@
 					nextPoint = vertex;
 				}
 			});
+			console.log("nextPoint: " + nextPoint);
 			if (point == nextPoint) {
 				if (lastPoint.maxVertex < exeptionedPointVertexes.length && lastPoint.vertex) {
 					lastPoint.maxVertex = exeptionedPointVertexes.length;
@@ -248,9 +301,10 @@
 					lastPoint.position--;
 					lastPoint.vertex = exeptionedPointVertexes[lastPoint.position];
 				} else {
-					lastPoint.position = exeptionedPointVertexes.length - 2;
+					lastPoint.position = exeptionedPointVertexes.length - 1;
 					lastPoint.vertex = exeptionedPointVertexes[lastPoint.position]
 					lastPoint.maxVertex = exeptionedPointVertexes.length;
+					console.log(exeptionedPointVertexes);
 				}
 
 				if (lastPoint.position >= 0) {
@@ -258,7 +312,7 @@
 					continue;
 				} else break;
 			}
-			//console.log("nextPoint: " + nextPoint);
+			console.log("nextPoint: " + nextPoint);
 
 			
 			if (!exeptionedPointVertexes.includes(point)) {
@@ -274,8 +328,8 @@
 				
 				exeptionedPointVertexes.push(point);
 			}
-			//console.log("exeptionedPointVertexes: " + exeptionedPointVertexes);
-			//console.log("exeptionedVertexes: " + exeptionedVertexes);
+			console.log("exeptionedPointVertexes: " + exeptionedPointVertexes);
+			console.log("exeptionedVertexes: " + exeptionedVertexes);
 
 			point = nextPoint;
 		}
@@ -292,18 +346,15 @@
 		findSumDegArborescence(buildedGraph, root);
 	}
 
-	let rootVertex = findRoot(graph);
-	//console.log(rootVertex);
+	findPosibleRoots(graph_4_new, graph_4_new);
 
-	let maxVertexes = findMaxVertexes(graph);
-	//console.log(maxVertexes);
+	//console.log(findMaxVertexes(graph));
 
-	let maxChain = findMaxChain(graph, maxVertexes);
-	//console.log(maxChain);
-
-	buildArborescence(graph_3, 8);
+	buildArborescence(graph_4_new, 2);
+	//console.log(graph);
 
 	//findSumDegArborescence(arborescenceGraph, 13);
+
 </script>
 </body>
 </html>
